@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<?!= typeof fontLink !== 'undefined' ? fontLink : '' ?>
+<style>
+:root{--navy:#1f3a5f;--navy2:#2c4f7c;--bg:#f4f6f9;--card:#fff;--line:#e3e7ee;--muted:#6b7686;--ink:#1c2430;
+--ban:#3d7be0;--pop:#2fa36b;--push:#e08a1e;--placed:#2f8a4a;--plan:#1f3a5f;--warn:#b45f06;
+--hl:#ffb547;--hlInk:#1c2430;--today:#fff7ec;--soft:#f0f3f8;--top:var(--navy);--topInk:#fff;--font:Inter,Arial,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--font);background:var(--bg);color:var(--ink);font-size:14px}
+header{background:var(--navy);color:#fff;padding:0}
+.top{background:var(--top);color:var(--topInk);padding:14px 24px}
+nav{padding:0 24px}
+.logo{height:40px;width:auto;display:block}
+.brand{color:var(--topInk)}
+.top{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{font-weight:700;font-size:20px;letter-spacing:.2px}
+.brand small{display:block;font-weight:400;font-size:12px;opacity:.75;margin-top:2px}
+.sp{flex:1}
+select.site{background:var(--navy2);color:#fff;border:1px solid rgba(255,255,255,.35);border-radius:8px;padding:6px 10px;font:inherit}
+.upd{font-size:12px;opacity:.8}
+nav{display:flex;gap:4px;overflow-x:auto}
+nav button{background:none;border:0;color:rgba(255,255,255,.78);font:500 14px var(--font);padding:10px 14px;border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap}
+nav button.on{color:#fff;border-bottom-color:var(--hl)}
+main{max-width:1280px;margin:0 auto;padding:20px 16px 60px}
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.chip{border:1px solid var(--line);background:#fff;border-radius:20px;padding:6px 12px;cursor:pointer;font:500 13px var(--font);color:var(--ink)}
+.chip.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+input.search{border:1px solid var(--line);border-radius:20px;padding:7px 14px;font:inherit;min-width:220px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:16px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.stat b{display:block;font-size:22px;color:var(--navy)}
+.stat span{font-size:12px;color:var(--muted)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.card h3{margin:0;font-size:16px;line-height:1.3}
+.meta{font-size:12px;color:var(--muted)}
+.pill{display:inline-block;font-size:11px;font-weight:600;padding:3px 9px;border-radius:10px}
+.st-размещено{background:#e3f3e8;color:var(--placed)}.st-запланировано{background:#e6edf7;color:var(--plan)}.st-уточняется{background:#fdf0e1;color:var(--warn)}
+.tag{font-size:13px;line-height:1.45;color:#38424f;white-space:pre-line}
+.fmt{display:grid;grid-template-columns:78px 1fr;gap:4px 10px;font-size:13px}
+.fmt .k{color:var(--muted);font-size:12px;padding-top:1px}
+.fmt .v{white-space:pre-line}
+.kpi{display:flex;gap:14px;font-size:12px;color:var(--muted)}.kpi b{color:var(--ink);font-size:14px}
+textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:8px 10px;font:13px var(--font);resize:vertical;min-height:38px;background:#fffdf3}
+.row{display:flex;gap:8px;align-items:center}
+.btn{background:var(--navy);color:#fff;border:0;border-radius:8px;padding:7px 14px;font:600 13px var(--font);cursor:pointer}
+.btn.ghost{background:#fff;color:var(--navy);border:1px solid var(--line)}
+.btn:disabled{opacity:.5}
+.ok{color:var(--placed);font-size:12px}.err{color:#c62828;font-size:12px}
+.card .cm{margin-top:auto}
+.cml{font-size:11px;color:var(--muted,#6b7686);margin:6px 0 3px}.reply{margin-top:8px;padding:8px 10px;border-left:3px solid var(--plan,#1f3a5f);background:var(--soft,#eef2f7);font-size:13px;border-radius:4px;white-space:pre-wrap}
+.card.svc{background:#f6f7f9}.card.svc h3{color:var(--muted)}
+.seg.svc{background:#b7bcc4}
+h5.grp{margin:22px 0 10px;font-size:14px;color:var(--muted)}
+.lst{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:auto}
+.lst table{width:100%;border-collapse:collapse;font-size:13px}
+.lst th{text-align:left;font-size:12px;font-weight:600;color:var(--muted);padding:9px 12px;background:var(--soft);white-space:nowrap}
+.lst td{padding:9px 12px;border-top:1px solid #eef1f5;vertical-align:top;white-space:pre-line}
+.lst td.n{font-weight:600;min-width:180px}.lst td.k{font-weight:700;text-align:right;white-space:nowrap}.lst th.k{text-align:right}
+.lst td.k.no{color:#c3c9d2;font-weight:400}
+.sp2{flex:1}
+.empty{background:#fff;border:1px dashed var(--line);border-radius:14px;padding:30px;text-align:center;color:var(--muted)}
+/* календарь */
+.gwrap{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:auto}
+table.g{border-collapse:collapse;font-size:12px;min-width:100%}
+table.g th,table.g td{border-bottom:1px solid #eef1f5;padding:0;height:26px}
+table.g th{position:sticky;top:0;background:var(--navy);color:#fff;font-weight:500;font-size:11px;min-width:26px}
+table.g th.we{background:var(--navy2)}table.g th.td{background:var(--hl);color:var(--hlInk)}
+table.g td.t,table.g th.t{width:240px;min-width:240px;max-width:240px}
+table.g td.t{position:sticky;left:0;background:#fff;padding:0 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500;z-index:1;border-right:1px solid var(--line)}
+table.g td.src{position:sticky;left:240px;width:130px;min-width:130px;max-width:130px;background:#fff;color:var(--muted);padding:0 8px;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-right:1px solid var(--line)}
+table.g td.inf{position:sticky;left:370px;width:120px;min-width:120px;max-width:120px;background:#fff;color:var(--muted);padding:0 8px;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+table.g td.f{position:sticky;left:490px;background:#fff;color:var(--muted);padding:0 8px;font-size:11px;white-space:nowrap;border-right:1px solid var(--line)}
+td.d{min-width:26px;position:relative}
+.pos{display:inline-block;min-width:22px;text-align:center;font-weight:700;color:#fff;background:var(--navy);border-radius:6px;padding:0 5px;margin-right:6px;font-size:11px}
+tr.past td.t{color:var(--muted);font-weight:400}
+tr.gap td{border-top:2px solid var(--line)}
+td.d.today{background:var(--today)}
+.seg{position:absolute;top:5px;bottom:5px;left:0;right:0}
+.seg.ban{background:var(--ban)}.seg.pop{background:var(--pop)}.seg.push{background:var(--push);left:6px;right:6px;border-radius:50%}
+.seg.push.set{box-shadow:inset 0 0 0 2px var(--navy)}.seg.push.sent{background:var(--placed)}.seg.push.cx{background:#d9dce1;opacity:.55}.seg.push.late{background:#0f8b8d}.card.miss{opacity:.6}.card.miss:hover{opacity:1}.sep{margin:18px 0 8px;font-weight:600;color:var(--muted)}
+.seg.s{border-top-left-radius:5px;border-bottom-left-radius:5px;left:2px}.seg.e{border-top-right-radius:5px;border-bottom-right-radius:5px;right:2px}
+.legend{display:flex;flex-wrap:wrap;align-items:center;gap:6px 20px;font-size:12px;color:var(--muted);margin:10px 0} /* 19l: в строку с переносом, подписи не ломаются */
+.legend>span{display:inline-flex;align-items:center;white-space:nowrap}
+.legend i{display:inline-block;flex:none;width:14px;height:10px;border-radius:3px;margin-right:6px}
+.legend .pos{margin-right:6px}
+/* витрина, push, предложения */
+.lenta{display:flex;gap:10px;overflow-x:auto;padding:14px 16px}
+.lc{flex:0 0 150px;border:1px solid var(--line);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:6px}
+.lp{align-self:flex-start;color:#fff;font-weight:700;border-radius:8px;padding:2px 9px;font-size:13px}
+.lt{font-weight:600;font-size:13px;line-height:1.3;min-height:34px}
+.lb{height:6px;background:#eef1f5;border-radius:3px;overflow:hidden}.lb i{display:block;height:100%}
+.lpc{font-weight:700;font-size:13px}
+.sec{background:#fff;border:1px solid var(--line);border-radius:14px;margin-bottom:14px;overflow:hidden}
+.sec h4{margin:0;padding:12px 16px;background:var(--soft);color:var(--navy);font-size:14px}
+.sec table{width:100%;border-collapse:collapse;font-size:13px}
+.sec td{padding:7px 12px;border-top:1px solid #eef1f5;vertical-align:top}
+.sec tr.h td{font-weight:600;color:var(--muted);font-size:12px}
+.push{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:14px}
+.pbot{margin-top:auto;display:flex;flex-direction:column;gap:10px} /* 19n: отметка, комментарий и кнопка — у нижнего края карточки */
+.mono{font-family:ui-monospace,Menlo,monospace;font-size:12px;background:#f3f5f9;padding:3px 6px;border-radius:6px;word-break:break-all}
+form.prop{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:18px}
+form.prop label{font-size:12px;color:var(--muted);display:flex;flex-direction:column;gap:4px}
+form.prop input,form.prop select{border:1px solid var(--line);border-radius:8px;padding:8px;font:13px var(--font)}
+.wide{grid-column:1/-1}
+.loading{padding:60px;text-align:center;color:var(--muted)}
+@media(max-width:600px){table.g td.t,table.g th.t{width:150px;min-width:150px;max-width:150px}.top{padding:12px 14px}nav{padding:0 14px}.logo{height:30px}.cards,.push{grid-template-columns:1fr}table.g td.f,table.g td.src,table.g td.inf{display:none}}
+.who{font-size:12px;color:var(--topInk,#fff);display:flex;align-items:center;gap:6px;margin-right:10px}.who input{font:inherit;padding:4px 8px;border:1px solid #ccc;border-radius:6px;width:150px;color:#1c2430}
+</style>
+<?!= typeof themeCss !== 'undefined' ? themeCss : '' ?>
+</head>
+<body>
+<header>
+  <div class="top">
+    <?!= typeof logoHtml !== 'undefined' ? logoHtml : '' ?><div class="brand">План промо · <?= site ?><small>Lifestream · баннеры, popup и push на вашей платформе</small></div>
+    <div class="sp"></div>
+    <label class="who">Ваше имя <input id="who" maxlength="60" placeholder="для подписи комментариев"></label>
+    <select class="site" id="site" style="display:none"></select>
+    <div class="upd" id="upd"></div>
+  </div>
+  <nav id="nav"></nav>
+</header>
+<main id="main"><div class="loading">Загружаем план…</div></main>
+
+<script>
+var P = <?!= JSON.stringify(p) ?>, PS = P.split(':')[0], PK = P.slice(PS.length + 1), SITES = <?!= sitesJson ?>, D = null, TAB = 'plan', MI = 0, FLT = 'all', Q = '', CF = 'all', VIEW = 'cards';
+var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+var $ = function (id) { return document.getElementById(id); };
+
+(function () {
+  if (SITES.length > 1) {
+    var s = $('site'); s.style.display = '';
+    s.innerHTML = SITES.map(function (x) { return '<option value="' + x.k + '"' + (x.k === PS ? ' selected' : '') + '>' + esc(x.name) + '</option>'; }).join('');
+    s.onchange = function () { google.script.run.withSuccessHandler(function (u) { window.top.location.href = u + '?s=' + s.value + '&k=' + encodeURIComponent(PK); }).pw_url(); };
+  }
+  try { $('who').value = localStorage.getItem('pw_who') || ''; } catch (e) {}
+  $('who').onchange = function () { try { localStorage.setItem('pw_who', this.value.trim()); } catch (e) {} };
+  load();
+})();
+/** 18b. Имя для подписи; пусто — просим заполнить и не сохраняем. */
+function who(s) {
+  var w = $('who').value.trim();
+  if (!w) { s.className = 'err'; s.textContent = 'Укажите ваше имя вверху страницы'; $('who').focus(); }
+  return w;
+}
+
+function load() {
+  google.script.run.withSuccessHandler(function (d) { D = d; var now = new Date();
+    MI = Math.max(0, D.months.findIndex(function (m) { return m.y === now.getFullYear() && m.m === now.getMonth(); }));
+    $('upd').textContent = D.updated ? 'обновлено ' + D.updated : ''; nav(); render(); })
+  .withFailureHandler(function (e) { $('main').innerHTML = '<div class="empty">' + esc(e.message) + '</div>'; }).pw_data(P);
+}
+function nav() {
+  var t = [['plan', 'План'], ['cal', 'Календарь'], ['day', 'Витрина сегодня']];
+  if (D.push) t.push(['push', 'Push к отправке']);
+  if (D.props) t.push(['props', 'Предложить тайтл']);
+  t.push(['help', 'Как пользоваться']);
+  $('nav').innerHTML = t.map(function (x) { return '<button class="' + (x[0] === TAB ? 'on' : '') + '" onclick="TAB=\'' + x[0] + '\';nav();render()">' + x[1] + '</button>'; }).join('');
+}
+function render() { ({ plan: rPlan, cal: rCal, day: rDay, push: rPush, props: rProps, help: rHelp })[TAB](); }
+function monthBar() {
+  return D.months.map(function (m, i) { return '<button class="chip' + (i === MI ? ' on' : '') + '" onclick="MI=' + i + ';render()">' + esc(m.name) + '</button>'; }).join('');
+}
+
+/* ── План ── */
+function rPlan() {
+  var m = D.months[MI]; if (!m) { $('main').innerHTML = '<div class="empty">План пока пуст</div>'; return; }
+  var isSvc = function (r) { return r['Сущность'] === 'служебное уведомление'; };
+  var all = m.rows; m = { name: m.name, y: m.y, m: m.m, rows: all.filter(function (r) { return !isSvc(r); }) };
+  var svcRows = all.filter(isSvc);
+  var rows = m.rows.filter(function (r) {
+    if (FLT !== 'all' && r['Статус'] !== FLT) return false;
+    if (Q && (r['Название'] + ' ' + r['Источник']).toLowerCase().indexOf(Q.toLowerCase()) < 0) return false; return true; });
+  var cnt = function (k) { return m.rows.filter(function (r) { return r[k]; }).length; };
+  var h = '<div class="bar">' + monthBar() + '</div>';
+  h += '<div class="stats"><div class="stat"><b>' + m.rows.length + '</b><span>тайтлов в плане</span></div><div class="stat"><b>' + cnt('Баннеры') + '</b><span>с баннерами</span></div>' +
+    '<div class="stat"><b>' + cnt('Popup') + '</b><span>с popup</span></div><div class="stat"><b>' + cnt('Push') + '</b><span>с push</span></div>' +
+    '<div class="stat"><b>' + m.rows.filter(function (r) { return r['Статус'] === 'размещено'; }).length + '</b><span>уже размещено</span></div></div>';
+  h += '<div class="bar">' + [['all', 'Все'], ['запланировано', 'Запланировано'], ['размещено', 'Размещено']].map(function (x) {
+    return '<button class="chip' + (FLT === x[0] ? ' on' : '') + '" onclick="FLT=\'' + x[0] + '\';render()">' + x[1] + '</button>'; }).join('') +
+    '<input class="search" placeholder="Поиск по названию или источнику" value="' + esc(Q) + '" oninput="Q=this.value;clearTimeout(window._q);window._q=setTimeout(render,250)">' +
+    '<span class="sp2"></span>' + [['cards', 'Карточки'], ['list', 'Списком']].map(function (x) {
+    return '<button class="chip' + (VIEW === x[0] ? ' on' : '') + '" onclick="VIEW=\'' + x[0] + '\';render()">' + x[1] + '</button>'; }).join('') + '</div>';
+  var svcH = svcRows.length && FLT === 'all' && !Q ? '<h5 class="grp">Служебные уведомления — не промо, показаны для справки</h5>' +
+    '<div class="lst"><table><tr><th>Уведомление</th><th>Показ</th></tr>' + svcRows.map(function (r) { return '<tr><td class="n">' + esc(r['Название']) + '</td><td>' + esc(r['Popup']) + '</td></tr>'; }).join('') + '</table></div>' : '';
+  if (!rows.length) { $('main').innerHTML = h + '<div class="empty">Ничего не найдено</div>' + svcH; return; }
+  if (VIEW === 'list') {
+    var K = [['Баннеры: CTR', 'CTR баннеров'], ['Popup: CTR', 'CTR popup'], ['Push: open rate', 'Open rate push']];
+    var c = function (v) { return '<td>' + (v ? esc(v) : '<span class="meta">—</span>') + '</td>'; };
+    h += '<div class="lst"><table><tr><th>Тайтл</th><th>Источник</th><th>Статус</th><th>Баннеры</th><th>Popup</th><th>Push</th>' +
+      K.map(function (x) { return '<th class="k">' + x[1] + '</th>'; }).join('') + '</tr>' +
+      rows.map(function (r) {
+        return '<tr><td class="n">' + esc(r['Название']) + '</td>' + c(r['Источник']) + '<td><span class="pill st-' + esc(r['Статус']) + '">' + esc(r['Статус']) + '</span></td>' +
+          c(r['Баннеры']) + c(r['Popup']) + c(r['Push']) +
+          K.map(function (x) { return r[x[0]] ? '<td class="k">' + esc(r[x[0]]) + '</td>' : '<td class="k no">—</td>'; }).join('') + '</tr>';
+      }).join('') + '</table></div>';
+    $('main').innerHTML = h + svcH; return;
+  }
+  h += '<div class="cards">' + rows.map(function (r, i) {
+    var f = function (k, l) { return r[k] ? '<div class="k">' + l + '</div><div class="v">' + esc(r[k]) + '</div>' : ''; };
+    var kp = [['Баннеры: CTR', 'CTR баннеров'], ['Popup: CTR', 'CTR popup'], ['Push: open rate', 'open rate push']].filter(function (x) { return r[x[0]]; });
+    return '<div class="card"><div class="row" style="justify-content:space-between;align-items:flex-start"><div><h3>' + esc(r['Название']) + '</h3>' +
+      '<div class="meta">' + esc([r['Источник'], r['Сущность'], r['Год'], r['Дата релиза'] && 'релиз ' + r['Дата релиза'], INF(r)].filter(String).join(' · ')) + '</div></div>' +
+      '<span class="pill st-' + esc(r['Статус']) + '">' + esc(r['Статус']) + '</span></div>' +
+      (DSC(r) ? '<div class="tag">' + esc(DSC(r)) + '</div>' : '') +
+      '<div class="fmt">' + f('Баннеры', 'Баннеры') + f('Popup', 'Popup') + f('Push', 'Push') + '</div>' +
+      (kp.length ? '<div class="kpi">' + kp.map(function (x) { return '<span><b>' + esc(r[x[0]]) + '</b> ' + x[1] + '</span>'; }).join('') + '</div>' : '') +
+      (r['Ответ Lifestream'] ? '<div class="reply"><b>Ответ Lifestream:</b> ' + esc(r['Ответ Lifestream']) + '</div>' : '') +
+      '<div class="cm"><div class="cml">Последний комментарий</div><textarea id="c' + i + '" placeholder="Ваш комментарий: вопрос, правка, пожелание. Новый текст заменяет предыдущий">' + esc(r['Комментарий партнёра']) + '</textarea>' +
+      '<div class="row" style="margin-top:6px"><button class="btn ghost" onclick="saveC(' + i + ',\'' + esc(r['ключ']).replace(/'/g, "\\'") + '\')">Сохранить комментарий</button><span id="cs' + i + '"></span></div></div></div>';
+  }).join('') + '</div>' + svcH;
+  $('main').innerHTML = h;
+}
+function saveC(i, key) {
+  var t = $('c' + i).value, s = $('cs' + i), w = who(s); if (!w) return; s.className = ''; s.textContent = 'сохраняем…';
+  google.script.run.withSuccessHandler(function () { s.className = 'ok'; s.textContent = '✓ сохранено, Lifestream увидит его в своём плане';
+    D.months[MI].rows.forEach(function (r) { if (r['ключ'] === key) r['Комментарий партнёра'] = t; }); })
+    .withFailureHandler(function (e) { s.className = 'err'; s.textContent = e.message; }).pw_comment(P, D.months[MI].name, key, t, w);
+}
+
+/* 18a: «Тип инфоповода» / «Описание» (старые заголовки — «Инфоповод» / «Теглайн») */
+function INF(r) { return r['Тип инфоповода'] || r['Инфоповод'] || ''; }
+function DSC(r) { return r['Описание'] || r['Теглайн'] || ''; }
+/* ── Календарь ── */
+function segs(txt, m) {
+  var out = [];
+  String(txt || '').split('\n').forEach(function (line) {
+    var x = /(\d{2})\.(\d{2})(?:\s*[–-]\s*(\d{2})\.(\d{2}))?/.exec(line); if (!x) return;
+    var y = m.y, a = new Date(y, +x[2] - 1, +x[1]), b = x[3] ? new Date(y, +x[4] - 1, +x[3]) : a;
+    if (+x[2] - 1 < m.m - 6) a.setFullYear(y + 1); if (b < a) b.setFullYear(b.getFullYear() + 1);
+    out.push({ a: a, b: b, label: line.replace(x[0], '').replace(/\s+/g, ' ').trim() });
+  });
+  return out;
+}
+/* 16i: позиции на сегодня — из «Витрины сегодня»: карусель (№), главная премьера, стрип (места слева направо), popup (порядок по priority) */
+function nk(t) { return String(t || '').toLowerCase().replace(/ё/g, 'е').replace(/[^a-zа-я0-9]/g, ''); }
+function todayPos() {
+  var P0 = { car: {}, strip: {}, pop: {} }, d = D.day; if (!d) return P0;
+  d.secs.forEach(function (s) {
+    var t = s.title || '', rows = s.rows || [];
+    if (/^Карусель/i.test(t)) rows.forEach(function (r) { var m = /^≈?(\d+)$/.exec(String(r[0]).trim()); if (m && r[1]) { var k = nk(r[1]); if (!P0.car[k]) P0.car[k] = +m[1]; } });
+    else if (/^Popup/i.test(t)) { var n = 0, hd = false; rows.forEach(function (r) { if (r[0] === 'Priority') { hd = true; return; } if (hd && r[1]) { var k = nk(r[1]); n++; if (!P0.pop[k]) P0.pop[k] = n; } }); }
+    else if (/места слева направо/i.test(t)) {
+      for (var i = 0; i < rows.length - 1; i++) { var p = rows[i]; if (!p.filter(String).length || !p.filter(String).every(function (c) { return /^\d+$/.test(c); })) continue;
+        p.forEach(function (c, j) { String(rows[i + 1][j] || '').split('\n').forEach(function (tt) { var k = nk(tt); if (k && !P0.strip[k]) P0.strip[k] = +c; }); }); break; }
+    }
+  });
+  return P0;
+}
+function kindOf(f, label) { if (f !== 'ban') return f; return /карусел/i.test(label) ? 'car' : /главная премьера/i.test(label) ? 'gp' : 'strip'; } // 16i: стрип у площадки может называться по-своему («Осенние премьеры»)
+function rCal() {
+  var m = D.months[MI], h = '<div class="bar">' + monthBar() + '</div>';
+  h += '<div class="bar">' + [['all', 'Все'], ['car', 'Карусель'], ['gp', 'Главная премьера'], ['strip', 'Стрип'], ['pop', 'Popup'], ['push', 'Push']].map(function (x) {
+    return '<button class="chip' + (CF === x[0] ? ' on' : '') + '" onclick="CF=\'' + x[0] + '\';render()">' + x[1] + '</button>'; }).join('') + '</div>';
+  if (!m) { $('main').innerHTML = h + '<div class="empty">План пока пуст</div>'; return; }
+  var nd = new Date(m.y, m.m + 1, 0).getDate(), now = new Date(), wd = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
+  var t0 = new Date(now.getFullYear(), now.getMonth(), now.getDate()), POS = todayPos(), KO = { gp: 0, car: 1, strip: 2, pop: 3, push: 4 };
+  var th = '<tr><th class="t" style="left:0;position:sticky;z-index:2;text-align:left;padding:0 10px">Тайтл</th><th style="left:240px;position:sticky;z-index:2;padding:0 8px;text-align:left">Источник</th><th style="left:370px;position:sticky;z-index:2;padding:0 8px;text-align:left">Тип инфоповода</th><th style="left:490px;position:sticky;z-index:2;padding:0 8px">Формат</th>';
+  for (var d = 1; d <= nd; d++) { var dt = new Date(m.y, m.m, d), we = dt.getDay() % 6 === 0, td = dt.toDateString() === now.toDateString();
+    th += '<th class="' + (td ? 'td' : we ? 'we' : '') + '">' + d + '<br>' + wd[dt.getDay()] + '</th>'; }
+  th += '</tr>';
+  var items = [];
+  m.rows.forEach(function (r) {
+    [['Баннеры', 'ban', 'баннер'], ['Popup', 'pop', 'popup'], ['Push', 'push', 'push']].forEach(function (f) {
+      var sv = r['Сущность'] === 'служебное уведомление';
+      segs(r[f[0]], m).forEach(function (s) {
+        var k = kindOf(f[1], s.label);
+        if (CF !== 'all' && CF !== k) return;
+        var live = s.a <= t0 && s.b >= t0, pos = live && POS[k] ? POS[k][nk(r['Название'])] : 0;
+                items.push({ r: r, s: s, f: f, k: k, cl: sv ? 'svc' : f[1], pos: pos || 0, grp: live ? 0 : s.a > t0 ? 1 : 2 });
+      });
+    });
+  });
+  // 16i: сначала то, что на витрине сегодня — по формату и позиции; потом будущее по старту; прошедшее — в конце, свежее выше
+  items.sort(function (x, y) {
+    if (x.grp !== y.grp) return x.grp - y.grp;
+    if (x.grp === 0) { if (CF === 'all' && x.k !== y.k) return KO[x.k] - KO[y.k]; return (x.pos || 999) - (y.pos || 999) || (x.s.a - y.s.a); }
+    return x.grp === 1 ? x.s.a - y.s.a : y.s.b - x.s.b;
+  });
+  var body = '', prev = -1;
+  items.forEach(function (it) {
+    var r = it.r, s = it.s, f = it.f;
+    var fmt = f[1] === 'ban' ? (s.label || 'баннер') : f[2];
+    var pb = it.pos ? '<span class="pos" title="позиция сегодня">' + (it.k === 'pop' ? '#' : '') + it.pos + '</span>' : '';
+    body += '<tr class="' + (it.grp === 2 ? 'past' : '') + (prev >= 0 && prev !== it.grp ? ' gap' : '') + '"><td class="t" title="' + esc(r['Название']) + '">' + esc(r['Название']) + '</td><td class="src" title="' + esc(r['Источник']) + '">' + esc(r['Источник']) + '</td><td class="inf" title="' + esc(INF(r)) + '">' + esc(INF(r)) + '</td><td class="f">' + pb + esc(fmt) + '</td>';
+    prev = it.grp;
+    for (var d = 1; d <= nd; d++) {
+      var dt = new Date(m.y, m.m, d), on = dt >= s.a && dt <= s.b, td = dt.toDateString() === now.toDateString();
+      var pst = f[1] === 'push' ? (/отмен|не отправлен|пропущ/i.test(s.label) ? ' cx' : /позже/i.test(s.label) ? ' late' : /отправлен/i.test(s.label) ? ' sent' : /настроен/i.test(s.label) ? ' set' : '') : ''; // 12e: статус push
+      var cls = on ? 'seg ' + it.cl + pst + (dt - s.a === 0 || d === 1 ? ' s' : '') + (dt - s.b === 0 || d === nd ? ' e' : '') : '';
+      body += '<td class="d' + (td ? ' today' : '') + '"' + (on ? ' title="' + esc(r['Название'] + ' · ' + f[2] + ' ' + (s.label || '')) + '"' : '') + '>' + (on ? '<div class="' + cls + '"></div>' : '') + '</td>';
+    }
+    body += '</tr>';
+  });
+  h += '<div class="legend"><span><span class="pos">3</span>позиция на витрине сегодня (popup — порядок показа)</span><span><i style="background:var(--ban)"></i>баннер</span><span><i style="background:var(--pop)"></i>popup</span><span><i style="background:#b7bcc4"></i>служебное уведомление</span><span><i style="background:var(--push);border-radius:50%;width:10px"></i>push запланирован</span><span><i style="background:var(--push);border-radius:50%;width:10px;box-shadow:inset 0 0 0 2px var(--navy)"></i>настроен</span><span><i style="background:var(--placed);border-radius:50%;width:10px"></i>отправлен</span><span><i style="background:#0f8b8d;border-radius:50%;width:10px"></i>отправлен позже плана</span><span><i style="background:#d9dce1;border-radius:50%;width:10px"></i>отменён / не отправлен</span><span><i style="background:var(--today);border:1px solid var(--hl)"></i>сегодня</span></div>';
+  h += '<div class="meta" style="margin:-4px 0 10px">Сверху — то, что на витрине сегодня, по позиции; ниже — запланированное по дате старта; в конце (серым) — уже завершённое.</div>';
+  h += body ? '<div class="gwrap"><table class="g">' + th + body + '</table></div>' : '<div class="empty">' + (CF === 'all' ? 'В этом месяце ещё ничего не запланировано' : 'В этом месяце по этому фильтру ничего нет') + '</div>';
+  $('main').innerHTML = h;
+}
+
+/* ── Витрина сегодня ── */
+function rDay() {
+  var d = D.day; if (!d) { $('main').innerHTML = '<div class="empty">Снимка витрины пока нет</div>'; return; }
+  var h = '<div class="bar"><b>' + esc(d.date) + '</b><span class="meta">' + esc(d.note) + '</span></div>';
+  d.secs.forEach(function (s) {
+    if (s.lenta && s.lenta.length && /^Карусель лентой/.test(s.title)) { h += lenta(s); return; }
+    var rows = s.rows;
+    h += '<div class="sec"><h4>' + esc(s.title) + '</h4>' + (rows.length ? '<table>' + rows.map(function (r, i) {
+      var head = r[0] === '№' || (i === 0 && /^\d+$/.test(r[0]) && /^\d+$/.test(r[1] || '') );
+      return '<tr' + (head ? ' class="h"' : '') + '>' + r.map(function (c) { return '<td>' + esc(c) + '</td>'; }).join('') + '</tr>'; }).join('') + '</table>' : '<div style="padding:12px 16px" class="meta">—</div>') + '</div>';
+    if (s.lenta && s.lenta.length) h += lenta(s);
+  });
+  $('main').innerHTML = h;
+}
+
+function lenta(s) {
+  var col = function (p) { var n = parseInt(String(p).replace(/\D/g, ''), 10); return isNaN(n) ? '#9ea2a2' : n >= 50 ? 'var(--placed)' : n >= 20 ? '#7d8794' : '#c62828'; };
+  return '<div class="sec"><h4>Карусель лентой — как далеко доходят пользователи</h4><div class="lenta">' + s.lenta.map(function (x) {
+    var n = parseInt(String(x.pct).replace(/\D/g, ''), 10);
+    return '<div class="lc"><div class="lp" style="background:' + col(x.pct) + '">' + esc(x.pos) + '</div><div class="lt">' + esc(x.title) + '</div>' +
+      '<div class="meta">' + esc(x.src) + (x.aud ? ' · ' + esc(x.aud) : '') + '</div>' +
+      '<div class="lb"><i style="width:' + (isNaN(n) ? 0 : Math.min(n, 100)) + '%;background:' + col(x.pct) + '"></i></div><div class="lpc" style="color:' + col(x.pct) + '">' + esc(x.pct) + '</div></div>';
+  }).join('') + '</div><div class="meta" style="padding:0 16px 12px">≈% — примерная доля пользователей, которые долистывают карусель до этого места (оценка по вчерашним данным).</div></div>';
+}
+
+/* ── Push ── */
+function rPush() {
+  var h = '<div class="bar meta">Кампанию в AppMetrica назовите точно как в первой строке карточки — по названию мы считаем статистику. После отправки отметьте «Отправлено».</div>';
+  var main = D.push.filter(function (x) { return !x.miss; }), miss = D.push.filter(function (x) { return x.miss; });
+  if (!main.length) h += '<div class="empty">Push к отправке нет</div>';
+  var card = function (x) { var i = D.push.indexOf(x); if (x.miss) return missCard(x, i);
+    return '<div class="card' + (x.miss ? ' miss' : '') + '"><div class="row" style="justify-content:space-between"><span class="mono">' + esc(x.id) + '</span>' +
+      '<span class="pill ' + (x.miss ? 'st-уточняется' : x.sent ? 'st-размещено' : 'st-запланировано') + '">' + (x.miss ? 'не отправлен' : x.sent ? 'отправлен' : 'к отправке') + '</span></div>' +
+      '<div class="meta">' + esc(x.date + ' ' + x.time + ' · ' + x.title + (x.src ? ' · ' + x.src : '') + (x.aud ? ' · ' + x.aud : '')) + '</div>' +
+      '<div><b>' + esc(x.head) + '</b><div class="tag">' + esc(x.text) + '</div></div>' +
+      (x.link ? '<div class="mono">' + esc(x.link) + '</div>' : '<div class="err">Диплинк уточняется</div>') +
+      '<div class="pbot"><label class="row"><input type="checkbox" id="ps' + i + '"' + (x.sent ? ' checked' : '') + '> Отправлено</label>' +
+      '<div class="cml">Последний комментарий оператора</div><textarea id="pn' + i + '" placeholder="Комментарий оператора">' + esc(x.note) + '</textarea>' +
+      '<div class="row"><button class="btn" onclick="savePush(' + i + ')">Сохранить</button><span id="pr' + i + '"></span></div></div></div>';
+  };
+  h += '<div class="push">' + main.map(card).join('') + '</div>';
+  if (miss.length) h += '<div class="sep">Пропущенные — не отправлены. выберите новый день — покажем новое имя кампании; если уже отправили — укажите дату и название кампании</div><div class="push">' + miss.map(card).join('') + '</div>';
+  $('main').innerHTML = h;
+}
+/* 19o. Пропущенный push: сначала выбор — «в другой день» (дата → новое имя кампании) или «уже отправили» (под старым именем) */
+function pushName(dt, tm, title) { // как pp_pushName в библиотеке: ддммгг-ЧЧ/ММ Тайтл
+  var p = String(dt).split('-'); return p[2] + p[1] + p[0].slice(-2) + '-' + String(tm || '18:00').replace(':', '/') + ' ' + String(title).trim();
+}
+function missCard(x, i) {
+  var t = new Date(), today = t.getFullYear() + '-' + ('0' + (t.getMonth() + 1)).slice(-2) + '-' + ('0' + t.getDate()).slice(-2);
+  return '<div class="card miss"><div class="row" style="justify-content:space-between"><b>' + esc(x.title) + '</b><span class="pill st-уточняется">не отправлен</span></div>' +
+    '<div class="meta">' + esc('план был ' + x.date + ' ' + x.time + (x.src ? ' · ' + x.src : '') + (x.aud ? ' · ' + x.aud : '')) + '</div>' +
+    '<div><b>' + esc(x.head) + '</b><div class="tag">' + esc(x.text) + '</div></div>' +
+    (x.link ? '<div class="mono">' + esc(x.link) + '</div>' : '<div class="err">Диплинк уточняется</div>') +
+    '<div class="pbot"><div class="cml">Отправить в другой день</div>' +
+    '<div class="row"><input type="date" id="pd' + i + '" min="' + today + '" oninput="missName(' + i + ')"> <input type="time" id="pt' + i + '" value="' + esc(x.time || '18:00') + '" oninput="missName(' + i + ')"></div>' +
+    '<div class="meta" id="pm' + i + '">Выберите дату — покажем имя кампании</div>' +
+    '<div class="row"><button class="btn" onclick="saveMiss(' + i + ',0)">Вернуть в план</button></div>' +
+    '<div class="cml">Уже отправили?</div><div class="meta">Укажите, когда и под каким названием кампании — по нему считаем статистику</div>' +
+    '<div class="row">Дата отправки <input type="date" id="ps' + i + '" max="' + today + '"></div>' +
+    '<label class="row" style="flex-direction:column;align-items:stretch;gap:4px">Название кампании в AppMetrica <input id="pk' + i + '" value="' + esc(x.id) + '"></label>' +
+    '<div class="row"><button class="btn" onclick="saveMiss(' + i + ',1)">Отметить отправленным</button></div>' +
+    '<div class="cml">Комментарий оператора</div><textarea id="pn' + i + '" placeholder="Комментарий оператора">' + esc(x.note) + '</textarea>' +
+    '<div class="row"><span id="pr' + i + '"></span></div></div></div>';
+}
+function missName(i) {
+  var x = D.push[i], d = $('pd' + i).value, tm = $('pt' + i).value || x.time;
+  $('pm' + i).innerHTML = d ? 'Назовите кампанию: <span class="mono">' + esc(pushName(d, tm, x.title)) + '</span>' : 'Выберите дату — покажем имя кампании';
+}
+function saveMiss(i, sent) {
+  var x = D.push[i], s = $('pr' + i), note = $('pn' + i).value, d = $('pd' + i).value, tm = $('pt' + i).value || x.time, nd = '', nm = '', w = who(s); if (!w) return;
+  var ru = function (v) { var p = v.split('-'); return p[2] + '.' + p[1] + '.' + p[0]; };
+  if (!sent) { if (!d) { s.className = 'err'; s.textContent = 'выберите дату'; return; } nd = ru(d) + ' ' + tm; }
+  else { var sd = $('ps' + i).value; nm = $('pk' + i).value.trim();
+    if (!sd) { s.className = 'err'; s.textContent = 'укажите дату отправки'; return; }
+    if (!nm) { s.className = 'err'; s.textContent = 'укажите название кампании'; return; } nd = ru(sd); d = sd; }
+  s.className = ''; s.textContent = 'сохраняем…';
+  google.script.run.withSuccessHandler(function () { x.note = note; s.className = 'ok';
+      s.innerHTML = sent ? '✓ отмечено: отправлен ' + esc(ru(d)) + ' под названием <span class="mono">' + esc(nm) + '</span>' : '✓ вернём в план — назовите кампанию <span class="mono">' + esc(pushName(d, tm, x.title)) + '</span>. В списке «к отправке» появится после обновления плана (до 10 мин)'; })
+    .withFailureHandler(function (e) { s.className = 'err'; s.textContent = e.message; }).pw_push(P, x.id, !!sent, note, w, nd, nm);
+}
+function savePush(i) {
+  var x = D.push[i], s = $('pr' + i), sent = $('ps' + i).checked, note = $('pn' + i).value, nd = '', w = who(s); if (!w) return;
+  s.className = ''; s.textContent = 'сохраняем…';
+  google.script.run.withSuccessHandler(function () { x.sent = sent; x.note = note; s.className = 'ok'; s.textContent = nd ? '✓ вернём в план на ' + nd + ' (появится после обновления плана)' : '✓ сохранено'; })
+    .withFailureHandler(function (e) { s.className = 'err'; s.textContent = e.message; }).pw_push(P, x.id, sent, note, w, nd);
+}
+
+/* ── Предложения ── */
+var FMTS = ['ВБ', 'ВБ + Popup', 'ВБ + Push', 'ВБ + Popup + Push', 'ВБ + стрип', 'ГП + ВБ', 'Popup', 'Push', 'Popup + Push', 'стрип'];
+function rProps() {
+  var h = '<form class="prop" onsubmit="propose(event)">' +
+    '<label>Дата релиза<input type="date" name="rel" required></label>' +
+    '<label>Источник (кинотеатр / канал)<input name="src" required></label>' +
+    '<label>Название<input name="title" required></label>' +
+    '<label>Сущность<select name="ent"><option>фильм</option><option>сериал</option><option>мультфильм</option><option>мультсериал</option><option>трансляция</option><option>шоу</option></select></label>' +
+    '<label>Инфоповод<input name="info" placeholder="премьера, новый сезон…"></label>' +
+    '<label>Форматы<select name="fmt"><option value="">ВБ (по умолчанию)</option>' + FMTS.map(function (f) { return '<option>' + f + '</option>'; }).join('') + '</select></label>' +
+    '<label class="wide">Ссылка на портале<input name="link" type="url" placeholder="https://…"></label>' +
+    '<label class="wide">Комментарий<textarea name="note" placeholder="Почему важно, пожелания по датам"></textarea></label>' +
+    '<div class="row wide"><button class="btn" type="submit">Отправить предложение</button><span id="pp"></span></div></form>';
+  h += '<div class="sec"><h4>Ваши предложения</h4>' + (D.props.length ? '<table><tr class="h"><td>Релиз</td><td>Тайтл</td><td>Форматы</td><td>Комментарий (автор)</td><td>Статус</td></tr>' +
+    D.props.slice().reverse().map(function (x) { return '<tr><td>' + esc(x.rel) + '</td><td><b>' + esc(x.title) + '</b><div class="meta">' + esc(x.src) + '</div></td><td>' + esc(x.fmt || 'ВБ') + '</td><td class="meta">' + esc(x.note || '') + '</td><td>' +
+      '<span class="pill ' + (/^принято/.test(x.st) ? 'st-размещено' : /не берём/.test(x.st) ? 'st-уточняется' : 'st-запланировано') + '">' + esc(x.st || 'отправлено, ждёт обработки') + '</span></td></tr>'; }).join('') + '</table>'
+    : '<div style="padding:12px 16px" class="meta">Пока нет</div>') + '</div>';
+  h += '<div class="meta">Статусы: «получено ДД.ММ» — увидели; «принято: …» — берём, перечислены запланированные форматы с датами; «принято, даты уточняем»; «не берём». Принятый тайтл появится во вкладке «План» своего месяца.</div>';
+  $('main').innerHTML = h;
+}
+function propose(ev) {
+  ev.preventDefault(); var f = ev.target, o = {}, s = $('pp'), w = who(s); if (!w) return;
+  ['rel', 'src', 'title', 'ent', 'info', 'fmt', 'link', 'note'].forEach(function (k) { o[k] = f[k].value; });
+  s.className = ''; s.textContent = 'отправляем…';
+  google.script.run.withSuccessHandler(function () { D.props.push({ rel: o.rel.split('-').reverse().join('.'), src: o.src, title: o.title, fmt: o.fmt, note: (o.note ? o.note + ' — ' : '— ') + w, st: '' }); rProps(); $('pp').className = 'ok'; $('pp').textContent = '✓ предложение отправлено'; })
+    .withFailureHandler(function (e) { s.className = 'err'; s.textContent = e.message; }).pw_propose(P, o, w);
+}
+
+/* ── Справка ── */
+function rHelp() {
+  $('main').innerHTML = '<div class="sec"><h4>Как пользоваться</h4><div style="padding:14px 18px;line-height:1.6">' +
+    '<p><b>План</b> — что мы продвигаем в месяце: баннеры (карусель, главная премьера, стрип; «м.N» — место), popup (даты показа), push (дата и время). Статус «запланировано» — ещё не началось, «размещено» — хотя бы один формат уже идёт или прошёл. CTR и open rate появляются после размещения.</p>' +
+    '<p><b>Комментарий</b> — под каждым тайтлом. Мы видим его в своём плане и ответим правкой или письмом.</p>' +
+    '<p><b>Календарь</b> — те же форматы по дням месяца. <b>Витрина сегодня</b> — что фактически стоит на главном экране.</p>' +
+    (D.push ? '<p><b>Push к отправке</b> — готовые тексты и диплинки; кампанию в AppMetrica называйте как в карточке, после отправки отметьте «Отправлено».</p>' : '') +
+    (D.props ? '<p><b>Предложить тайтл</b> — форма и список ваших предложений со статусами.</p>' : '') +
+    '<p class="meta">Показано только запланированное. Данные обновляются несколько раз в день (время — справа вверху).</p></div></div>';
+}
+</script>
+</body>
+</html>
