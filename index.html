@@ -139,7 +139,7 @@ function gsr() {
   });
   return o;
 }
-var P = '', PS = '', PK = '', SITES = [], D = null, TAB = 'plan', MI = 0, FLT = 'all', Q = '', CF = 'all', VIEW = 'cards';
+var P = '', PS = '', PK = '', CODE = '', SITES = [], D = null, TAB = 'plan', MI = 0, FLT = 'all', Q = '', CF = 'all', VIEW = 'cards';
 var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
 var $ = function (id) { return document.getElementById(id); };
 
@@ -147,21 +147,24 @@ function boot() {
   if (SITES.length > 1) {
     var s = $('site'); s.style.display = '';
     s.innerHTML = SITES.map(function (x) { return '<option value="' + x.k + '"' + (x.k === PS ? ' selected' : '') + '>' + esc(x.name) + '</option>'; }).join('');
-    s.onchange = function () { gsr().withSuccessHandler(function (u) { location.search = '?s=' + s.value + '&k=' + encodeURIComponent(PK); }).pw_url(); };
+    s.onchange = function () { gsr().withSuccessHandler(function (u) { var h = CODE + '/' + s.value; if (location.search) location.href = location.pathname + '#' + h; else { location.hash = h; location.reload(); } }).pw_url(); };
   }
   try { $('who').value = localStorage.getItem('pw_who') || ''; } catch (e) {}
   $('who').onchange = function () { try { localStorage.setItem('pw_who', this.value.trim()); } catch (e) {} };
   load();
 }
-(function () { // площадка и оформление по ссылке
-  var q = new URLSearchParams(location.search);
+(function () { // площадка и оформление по ссылке: #код[/площадка] (26b) или старое ?s=…&k=…
+  var q = new URLSearchParams(location.search), h = decodeURIComponent(location.hash.slice(1)).split('/');
+  var s0 = q.get('s') || h[1] || '', k0 = q.get('k') || h[0] || '';
+  if (!k0) { document.body.innerHTML = '<div style="font:18px Arial;padding:48px 32px;color:#1f3a5f;max-width:600px;line-height:1.5">Привет! Чтобы открыть вашу партнёрскую страницу, ' +
+    'введите полную ссылку. Если потеряли — обратитесь к коллегам из Лайфстрим.</div>'; document.title = 'План промо'; return; }
   gsr().withSuccessHandler(function (i) {
-    P = i.p; PS = P.split(':')[0]; PK = P.slice(PS.length + 1); SITES = i.sites;
+    P = i.p; PS = P.split(':')[0]; PK = P.slice(PS.length + 1); CODE = i.code || PK; SITES = i.sites;
     document.title = 'План промо — ' + i.site; document.head.insertAdjacentHTML('beforeend', (i.font || '') + (i.themeCss || ''));
     $('logoSlot').outerHTML = i.logo || ''; $('siteName').textContent = i.site; boot();
   }).withFailureHandler(function (e) {
     document.body.innerHTML = '<div style="font:16px Arial;padding:40px;color:#1f3a5f;max-width:560px">' + esc(e.message) + '</div>';
-  }).pw_init(q.get('s') || '', q.get('k') || '');
+  }).pw_init(s0, k0);
 })();
 /** 18b. Имя для подписи; пусто — просим заполнить и не сохраняем. */
 function who(s) {
@@ -173,7 +176,7 @@ function who(s) {
 function load() {
   gsr().withSuccessHandler(function (d) { D = d; var now = new Date();
     MI = Math.max(0, D.months.findIndex(function (m) { return m.y === now.getFullYear() && m.m === now.getMonth(); }));
-    $('upd').textContent = D.updated ? 'обновлено ' + D.updated : ''; nav(); render(); })
+    $('upd').textContent = D.updated ? 'обновлено ' + D.updated : ''; if (D.ro && !D.push && !D.props) $('who').parentNode.style.display = 'none'; nav(); render(); })
   .withFailureHandler(function (e) { $('main').innerHTML = '<div class="empty">' + esc(e.message) + '</div>'; }).pw_data(P);
 }
 function nav() {
@@ -232,8 +235,8 @@ function rPlan() {
       '<div class="fmt">' + f('Баннеры', 'Баннеры') + f('Popup', 'Popup') + f('Push', 'Push') + '</div>' +
       (kp.length ? '<div class="kpi">' + kp.map(function (x) { return '<span><b>' + esc(r[x[0]]) + '</b> ' + x[1] + '</span>'; }).join('') + '</div>' : '') +
       (r['Ответ Lifestream'] ? '<div class="reply"><b>Ответ Lifestream:</b> ' + esc(r['Ответ Lifestream']) + '</div>' : '') +
-      '<div class="cm"><div class="cml">Последний комментарий</div><textarea id="c' + i + '" placeholder="Ваш комментарий: вопрос, правка, пожелание. Новый текст заменяет предыдущий">' + esc(r['Комментарий партнёра']) + '</textarea>' +
-      '<div class="row" style="margin-top:6px"><button class="btn ghost" onclick="saveC(' + i + ',\'' + esc(r['ключ']).replace(/'/g, "\\'") + '\')">Сохранить комментарий</button><span id="cs' + i + '"></span></div></div></div>';
+      (D.ro ? '' : '<div class="cm"><div class="cml">Последний комментарий</div><textarea id="c' + i + '" placeholder="Ваш комментарий: вопрос, правка, пожелание. Новый текст заменяет предыдущий">' + esc(r['Комментарий партнёра']) + '</textarea>' +
+      '<div class="row" style="margin-top:6px"><button class="btn ghost" onclick="saveC(' + i + ',\'' + esc(r['ключ']).replace(/'/g, "\\'") + '\')">Сохранить комментарий</button><span id="cs' + i + '"></span></div></div>') + '</div>'; // 23b: D.ro — без комментариев
   }).join('') + '</div>' + svcH;
   $('main').innerHTML = h;
 }
@@ -444,7 +447,7 @@ function propose(ev) {
 function rHelp() {
   $('main').innerHTML = '<div class="sec"><h4>Как пользоваться</h4><div style="padding:14px 18px;line-height:1.6">' +
     '<p><b>План</b> — что мы продвигаем в месяце: баннеры (карусель, главная премьера, стрип; «м.N» — место), popup (даты показа), push (дата и время). Статус «запланировано» — ещё не началось, «размещено» — хотя бы один формат уже идёт или прошёл. CTR и open rate появляются после размещения.</p>' +
-    '<p><b>Комментарий</b> — под каждым тайтлом. Мы видим его в своём плане и ответим правкой или письмом.</p>' +
+    (D.ro ? '' : '<p><b>Комментарий</b> — под каждым тайтлом. Мы видим его в своём плане и ответим правкой или письмом.</p>') +
     '<p><b>Календарь</b> — те же форматы по дням месяца. <b>Витрина сегодня</b> — что фактически стоит на главном экране.</p>' +
     (D.push ? '<p><b>Push к отправке</b> — готовые тексты и диплинки; кампанию в AppMetrica называйте как в карточке, после отправки отметьте «Отправлено».</p>' : '') +
     (D.props ? '<p><b>Предложить тайтл</b> — форма и список ваших предложений со статусами.</p>' : '') +
